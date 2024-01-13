@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "text": "What is the sum of 5 + 3?",
+      "choices": ["6", "8", "10", "12"],
+      "answer": 1
+    },
+    {
+      "text": "Find the result of 7 + 4.",
+      "choices": ["9", "11", "13", "15"],
+      "answer": 1
+    },
+    {
+      "text": "Add 6 and 2 together.",
+      "choices": ["6", "8", "10", "12"],
+      "answer": 1
+    }
+  ]
+}
