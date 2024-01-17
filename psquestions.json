@@ -38,7 +38,7 @@
     {
       "text": "How much is 6 times 1?",
       "choices": ["6", "7", "8", "9"],
-      "answer": 1
+      "answer": 0
     },
     {
       "text": "Find the product of 8 x 3.",
@@ -63,22 +63,22 @@
     {
       "text": "Find the product of 5 x 6.",
       "choices": ["24", "30", "36", "42"],
-      "answer": 4
+      "answer": 1
     },
     {
       "text": "What is the result of 2 x 9?",
       "choices": ["16", "18", "20", "22"],
-      "answer": 2
+      "answer": 1
     },
     {
       "text": "Multiply 10 by 3.",
       "choices": ["24", "30", "36", "40"],
-      "answer": 3
+      "answer": 1
     },
     {
       "text": "Emily has 4 bags of candies, and each bag has 3 candies. How many candies does Emily have in total?",
       "choices": ["9", "10", "11", "12"],
-      "answer": 0
+      "answer": 3
     },
     {
       "text": "There are 6 shelves in a library, and each shelf has 8 books. How many books are there in total?",
@@ -88,17 +88,17 @@
     {
       "text": "Tom has 5 toy cars, and each toy car has 2 wheels. How many wheels are there in total?",
       "choices": ["8", "10", "12", "14"],
-      "answer": 2
+      "answer": 1
     },
     {
       "text": "A farmer has 7 fields, and each field has 4 apple trees. How many apple trees does the farmer have in total?",
       "choices": ["24", "28", "32", "36"],
-      "answer": 0
+      "answer": 1
     },
     {
       "text": "Lisa buys 9 packs of stickers, and each pack has 6 stickers. How many stickers does Lisa have in total?",
       "choices": ["48", "52", "54", "56"],
-      "answer": 0
+      "answer": 2
     }
 ]
 }
