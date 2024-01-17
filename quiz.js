@@ -1,6 +1,6 @@
 // Fetch questions from JSON file
 async function getQuestions() {
-    const response = await fetch('questions.json');
+    const response = await fetch('Bio6.json');
     const data = await response.json();
     return data.questions;
 }

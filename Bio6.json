@@ -1,0 +1,125 @@
+{
+    "questions": [
+      {
+        "text": "Which one of the following species is not included under the ‘Red List’?",
+        "choices": ["Vulnerable", "Endangered", "Endemic", "Extinct"],
+        "answer": 2,
+        "Explanation":"Endemic species are those species of plants and animals which are found exclusively in a particular area. They are not naturally found anywhere else. Endemic species are not included under red list because the red list contains those species whose continued existence is threatened. Each Red Data Book usually deals with a specific group of animals or plants (e.g., reptiles, insects, mosses)."
+      },
+      {
+        "text": "Creation of wildlife reserves and endorsement of laws are conservation measures that promote increased",
+        "choices": ["exploitation of species", "use of biological control", "preservation of species", "use of biological fertilisers"],
+        "answer": 2,
+        "Explanation":"The creation of wildlife reserves and enforcement of laws are conservation measures that promote increased preservation of species. It is estimated that tropical forests are losing 2 – 5 species per hour or 14,000 – 40,000 species per year. If the current rate of species extinction goes on unabated, 50% of species are liable to die out by the end of the 21st century."
+      },
+      {
+        "text": "Identify the correctly matched pair from the following.",
+        "choices": ["Sunderban – Rhino", "Ranthambore – Lion", "Gir – Lion", "Kaziranga – Sea turtle"],
+        "answer": 2,
+        "Explanation":"Gir Sanctuary is situated in Gujarat. Lions are the highly protected wild animals of this sanctuary. It was upgraded into a national park in 1975. Sunderbans is known for protecting tigers. Kaziranga national park is known for its one-horned rhinoceros.Tigers are the pride of Ranthambore National Park, which is located in Rajasthan."
+      },
+      {
+        "text": "What is the main reason that many species are becoming endangered",
+        "choices": ["Habitat Destruction", "Disease", "Natural Selection", "Acid rain"],
+        "answer": 0,
+        "Explanation":"When habitats are destroyed, many species are left homeless. These species either die or get displaced. They have less area to live and reproduce."
+      },
+      {
+        "text": "The process of conversion of fertile lands into deserts is known as",
+        "choices": ["Famine", "Acid rain", "Drought", "Desertification"],
+        "answer": 3,
+        "Explanation":"Desertification is the process in which fertile lands get gradually converted into arid and barren lands. Eventually, these lands get converted completely into deserts."
+      },
+      {
+        "text": "A group of the population that are capable of interbreeding is known as",
+        "choices": ["Species", "Flora", "Sal", "Fauna"],
+        "answer": 0,
+        "Explanation":"Species refer to a group of living organisms which are capable of interbreeding and producing fertile offspring."
+      },
+      {
+        "text": "Re-establishment of forest on a land that was cleared for commercial/personal purposes is",
+        "choices": ["Reforestation", "Deforestation", "Forestation", "Bi-forestation"],
+        "answer": 0,
+        "Explanation":"Planting trees in areas where forests were cleared for commercial or non-commercial purposes is called reforestation."
+      },
+      {
+        "text": "__is referred to as the variety of animals, plants and microbes generally found in an area",
+        "choices": ["Flora", "Extinct species", "Biodiversity", "Fauna"],
+        "answer": 2,
+        "Explanation":"Biodiversity refers to the variety of plants, animals and microbes found in an area and their interrelationships with each other and with the environment."
+      },
+      {
+        "text": "Which amongst the following is not the consequence of deforestation?",
+        "choices": ["Biodiversity equilibrium", "Flash floods", "Droughts", "Soil erosion"],
+        "answer": 0,
+        "Explanation":"Biodiversity equilibrium means maintaining a balance between the variety and variability of life on Earth which gets influenced by deforestation. Deforestation is a major cause which leads to the change in soil properties. Fewer trees result in more soil erosion. Removal of the top layer of the soil exposes the lower, hard and rocky layers. This soil has less humus and is less fertile. Gradually the fertile land gets converted into deserts. It is called desertification. It also leads to a decrease in the water-holding capacity of the soil. The movement of water from the soil surface into the ground is reduced. So, there are floods."
+      },
+      {
+        "text": "Species found exclusively in a particular area are called ______________ species.",
+        "choices": ["Endangered", "Endemic", "Migrating", "extinct"],
+        "answer": 1,
+        "Explanation":"Endemic species are those species of plants or animals which are found exclusively in a particular area. They are not naturally found anywhere else. A particular type of animal or plant may be endemic to a zone, a state or a country. For example, kangaroos are endemic to Australia."
+      },
+      {
+        "text": "Animals are protected in their natural habitats in a ___",
+        "choices": ["Garden", "zoological park", "wildlife sanctuary", "aquarium"],
+        "answer": 2,
+        "Explanation":"Wildlife sanctuary provides protection to wildlife species from hunting, predation, competition or poaching. It is a heavily guarded area or a geographic territory, within which wildlife is protected in its natural habitat."
+      },
+      {
+        "text": "Animal life occurring in a particular region or time is known as",
+        "choices": ["Flora", "Biota", "Fauna", "species"],
+        "answer": 2,
+        "Explanation":"Fauna is the animal life occurring in a particular region. The corresponding term for plant life is flora. Blue-bull, barking deer, cheetah, leopard, wild dog and wolf are examples of fauna of the Pachmarhi Biosphere Reserve."
+      },
+      {
+        "text": "Birds that travel long distances to overcome harsh conditions are known as __",
+        "choices": ["travelling birds", "flying birds", "endangered birds", "migratory birds"],
+        "answer": 3,
+        "Explanation":"Birds travelling long distances seasonally, to reach faraway lands with suitable climate conditions, are called migratory birds. They migrate each year at a particular season to escape from harsh climatic conditions. Examples of migratory birds include the Arctic tern and the Siberian crane."
+      },
+      {
+        "text": "Which act was aimed at the preservation and conservation of natural forests in India?",
+        "choices": ["Forest Conservation Act", "Forest Preservation Act", "Prevention act", "Biodiversity Act"],
+        "answer": 0,
+        "Explanation":"The Forest Conservation Act 1980 was implemented to help conserve the country’s forests. It strictly restricts and regulates the use of forest land for non-forest purposes without the prior approval of the Central Government."
+      },
+      {
+        "text": "Animals that are diminishing to a level of extinction are called",
+        "choices": ["endangered species", "extinct species", "endemic species", "dangerous species"],
+        "answer": 0,
+        "Explanation":"Endangered species are the species which have been categorised by the International Union for Conservation of Nature (IUCN) as likely to become extinct. These species are diminishing to a level of extinction. For example, Asian elephants, Vietnamese pheasants, etc."
+      },
+      {
+        "text": "Why do people visit national parks in well-protected vehicles?",
+        "choices": ["Animals move freely inside a national park", "There are well-built roads inside a national park", "To enjoy the ride in a different vehicle", "The tourists are lazy to walk"],
+        "answer": 0,
+        "Explanation":"In any national park, the animals and plants are aimed to be conserved in their natural habitat so wild animals are not kept in captivity. Hence, tourists watch them through a well-protected vehicle for their own safety."
+      },
+      {
+        "text": " Which of the following is not responsible for causing global warming?",
+        "choices": ["Ozone layer", "Jet planes", "Methane", "Carbon dioxide"],
+        "answer": 0,
+        "Explanation":"Ozone layer acts as a shield which absorbs the harmful UV rays from the sun and is found in the stratosphere.        ∙ Global warming is a phenomenon of climate change which is characterised by an increase in the average temperature of the Earth. It is directly linked to the increase of greenhouse gases like carbon dioxide and methane in the atmosphere."
+      },
+      {
+        "text": "Excessive combustion of fossil fuels leads to __",
+        "choices": ["Deforestation", "volcanic eruptions", "global warming", "earthquakes"],
+        "answer": 2,
+        "Explanation":"Greenhouse gases (carbon dioxide, methane, water vapour, etc.) trap the sun’s heat inside the atmosphere. The percentage of these gases increases in our atmosphere due to excessive usage of fossil fuels and this leads to an enhanced greenhouse effect. This is the main cause of global warming and climate change."
+      },
+      {
+        "text": "Which of the following is not the effect of global warming?",
+        "choices": ["Soil erosion", "Average rise in surface temperature", "Melting of ice on the poles", "Rise in sea level"],
+        "answer": 0,
+        "Explanation":"As the earth becomes hotter, the ice will melt on the poles and which will result in sea-level rise. Moreover, as the earth becomes hotter, it will make forests dry and more susceptible to forest fires. But global warming has no effect on soil and its fertility."
+      },
+      {
+        "text": "Uncontrolled deforestation leads to A. Destruction of habitats<br/> B. Soil erosion <br/> C. Flooding",
+        "choices": ["A, B and C", "B and C", "A and B", "A only"],
+        "answer": 0,
+        "Explanation":"During heavy rain, trees absorb and store a large amount of water with the help of their roots thus preventing the top fertile soil from being eroded and acting as a barrier to floodwater, preventing soil erosion and floods. Similarly, cutting down trees for agriculture or for setting up buildings destroys the natural habitat of animals, sometimes leading to their deaths."
+      }
+  ]
+  }
+  

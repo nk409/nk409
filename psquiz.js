@@ -89,6 +89,10 @@ function showQuestion(question) {
         cardBody.appendChild(mainDiv);
     });
 
+    const explanationParagraph = document.createElement('p');
+        explanationParagraph.innerText = `Explanation: ${question.Explanation}`;
+        cardBody.appendChild(explanationParagraph);
+
     questionCard.appendChild(cardBody);
     questionContainer.appendChild(questionCard);
 }
@@ -164,6 +168,10 @@ function showReview() {
             cardBody.appendChild(formCheckDiv);
         });
 
+        const explanationParagraph = document.createElement('p');
+            explanationParagraph.innerText = `Explanation: ${question.Explanation}`;
+            cardBody.appendChild(explanationParagraph);
+
         questionCard.appendChild(cardHeader);
         questionCard.appendChild(cardBody);
         quizContainer.appendChild(questionCard);
@@ -233,7 +241,9 @@ function showAllQuestionsAndAnswers() {
         quizContainer.appendChild(nextButton);
     }
 
-    showQuestionAndAnswers();
+    showReview();
+
+    //showQuestionAndAnswers();
 
     function showBackToQuestionsButton() {
         const backButton = document.createElement('button');

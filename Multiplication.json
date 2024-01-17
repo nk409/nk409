@@ -1,0 +1,104 @@
+{
+  "questions": [
+    {
+      "text": "What is the product of 4 x 3?",
+      "choices": ["6", "8", "10", "12"],
+      "answer": 3
+    },
+    {
+      "text": "Find the result of 5 x 2.",
+      "choices": ["9", "10", "12", "15"],
+      "answer": 2
+    },
+    {
+      "text": "Multiply 7 by 1.",
+      "choices": ["6", "7", "8", "9"],
+      "answer": 1
+    },
+    {
+      "text": "What is 9 times 4?",
+      "choices": ["27", "32", "36", "45"],
+      "answer": 2
+    },
+    {
+      "text": "Find the product of 6 x 5.",
+      "choices": ["24", "30", "36", "42"],
+      "answer": 1
+    },
+    {
+      "text": "What is the result of 3 x 4?",
+      "choices": ["6", "8", "10", "12"],
+      "answer": 3
+    },
+    {
+      "text": "Multiply 5 by 2.",
+      "choices": ["9", "10", "12", "15"],
+      "answer": 2
+    },
+    {
+      "text": "How much is 6 times 1?",
+      "choices": ["6", "7", "8", "9"],
+      "answer": 0
+    },
+    {
+      "text": "Find the product of 8 x 3.",
+      "choices": ["24", "32", "36", "45"],
+      "answer": 3
+    },
+    {
+      "text": "What is the result of 7 x 5?",
+      "choices": ["28", "35", "42", "49"],
+      "answer": 2
+    },
+    {
+      "text": "Multiply 9 by 2.",
+      "choices": ["16", "18", "20", "22"],
+      "answer": 3
+    },
+    {
+      "text": "How much is 4 times 7?",
+      "choices": ["24", "28", "32", "36"],
+      "answer": 2
+    },
+    {
+      "text": "Find the product of 5 x 6.",
+      "choices": ["24", "30", "36", "42"],
+      "answer": 1
+    },
+    {
+      "text": "What is the result of 2 x 9?",
+      "choices": ["16", "18", "20", "22"],
+      "answer": 1
+    },
+    {
+      "text": "Multiply 10 by 3.",
+      "choices": ["24", "30", "36", "40"],
+      "answer": 1
+    },
+    {
+      "text": "Emily has 4 bags of candies, and each bag has 3 candies. How many candies does Emily have in total?",
+      "choices": ["9", "10", "11", "12"],
+      "answer": 3
+    },
+    {
+      "text": "There are 6 shelves in a library, and each shelf has 8 books. How many books are there in total?",
+      "choices": ["38", "42", "46", "48"],
+      "answer": 3
+    },
+    {
+      "text": "Tom has 5 toy cars, and each toy car has 2 wheels. How many wheels are there in total?",
+      "choices": ["8", "10", "12", "14"],
+      "answer": 1
+    },
+    {
+      "text": "A farmer has 7 fields, and each field has 4 apple trees. How many apple trees does the farmer have in total?",
+      "choices": ["24", "28", "32", "36"],
+      "answer": 1
+    },
+    {
+      "text": "Lisa buys 9 packs of stickers, and each pack has 6 stickers. How many stickers does Lisa have in total?",
+      "choices": ["48", "52", "54", "56"],
+      "answer": 2
+    }
+]
+}
