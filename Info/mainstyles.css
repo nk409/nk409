@@ -1,0 +1,148 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    line-height: 1.5;
+}
+body{
+    color: #3006b8;
+}
+.logo{
+    width: 50px;
+    height: 50px;
+    margin: 5px 0 0 20px;
+}
+header{
+    display: flex;
+}
+.ham{
+    opacity: 0;
+}
+.ham-icon{
+    font-size: 45px;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    z-index: 1;
+    margin-right: 10px;
+}
+.ham:checked ~ul{
+    left: 0;
+}
+nav ul{
+    /* background-color: red; */
+    font-family: montserrat,sans-serif;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    text-align: center;
+    transition: .5s;
+    background: #fefefe;
+}
+nav ul li{
+    margin: 20px;
+    padding: 20px;
+}
+nav li a{
+    font-size: 18px;
+    color: #3006b8;
+}
+section{
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+}
+section img{
+    margin-top: 35px;
+}
+h1{
+    text-transform: uppercase;
+    font-size: 45px;
+    font-family: cursive,sans-serif;
+    font-weight: 600;
+    margin-top: 40px;
+    line-height: 1.2;
+}
+p{
+    margin: 15px 20px;
+    font-family: montserrat,sans-serif;
+}
+.start{
+    height: 40px;
+    border-radius: 20px;
+    background-color: #b82d06;
+    color: #fff;
+    padding: 2px;
+}
+button{
+    border: none;
+    width: 140px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: .5s;
+    text-transform: capitalize;
+    margin: 20px;
+}
+button:hover{
+    background-color: #3006b8;
+}
+img{
+    display: block;
+    width: 100%;
+}
+footer{
+    text-align: center;
+    padding-top: 40px;
+}
+footer ul li{
+    font-size: 35px;
+    display: inline;
+    padding: 10px;
+}
+
+@media (min-width:850px) {
+    nav ul{
+        text-align: right;
+        background-color: transparent;
+        margin-top: 20px;
+        position: absolute;
+        left: -8%;
+        height: auto;
+    }
+    nav ul li{
+        display: inline;
+        margin: 3px;
+        padding: 3px;
+    }
+    .ham-icon{
+        display: none;
+    }
+    section{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-top: 75px;
+        padding: 30px;
+        max-width: 1050px;
+        margin: auto;
+    }
+}
+
+
+@media (min-width:1200px) {
+    header{
+        display: flex;
+        position: relative;
+        width: 1050px;
+        margin: auto;
+    }
+    footer{
+        display: flex;
+        position: relative;
+        width: 1050px;
+        margin: auto;
+    }
+}
