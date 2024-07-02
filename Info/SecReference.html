@@ -1,0 +1,116 @@
+Gitlab:
+&scope=blobs
+intitle:"Sign in · GitLab"
+inurl:gitlab "AWS_SECRET_KEY"
+site:gitlab.* intext:password intext:@gmail.com | @yahoo.com | @hotmail.com
+filetype:txt site:gitlab.* "secret" OR "authtoken"
+"keystorePass=" ext:xml | ext:txt -git -gitlab
+jdbc:postgresql://localhost: + username + password ext:yml | ext:java -git -gitlab
+jdbc:oracle://localhost: + username + password ext:yml | ext:java -git -gitlab
+jdbc:mysql://localhost:3306/ + username + password ext:yml | ext:javascript -git -gitlab
+"spring.datasource.password=" + "spring.datasource.username=" ext:properties -git -gitlab
+jdbc:mysql://localhost:3306/ + username + password ext:yml | ext:java -git -gitlab
+"CREATE ROLE" + "ENCRYPTED PASSWORD" ext:sql | ext:txt | ext:ini -git -gitlab
+ext:cfg "g_password" | "sv_privatepassword" | "rcon_password" -git -gitlab
+"server.cfg" ext:cfg intext:"rcon_password" -git -gitlab
+"anaconda-ks.cfg" | "ks.cfg" ext:cfg -git -gitlab
+GitLab ssh.log ext:log
+intitle:"database.php" inurl:"database.php" intext:"db_password" -git -gitlab
+"keystorePass=" ext:xml | ext:txt -git -gitlab
+jdbc:oracle://localhost: + username + password ext:yml | ext:java -git -gitlab
+jdbc:postgresql://localhost: + username + password ext:yml | ext:java -git -gitlab
+"spring.datasource.password=" + "spring.datasource.username=" ext:properties -git -gitlab
+jdbc:mysql://localhost:3306/ + username + password ext:yml | ext:java -git -gitlab
+"CREATE ROLE" + "ENCRYPTED PASSWORD" ext:sql | ext:txt | ext:ini -git -gitlab
+ext:cfg "g_password" | "sv_privatepassword" | "rcon_password" -git -gitlab
+"server.cfg" ext:cfg intext:"rcon_password" -git -gitlab
+"anaconda-ks.cfg" | "ks.cfg" ext:cfg -git -gitlab
+intitle:"database.php" inurl:"database.php" intext:"db_password" -git -gitlab
+"POSTGRES_PASSWORD=" ext:txt | ext:cfg | ext:env | ext:ini | ext:yml | ext:sql -git -gitlab
+inurl:credentials.txt -github -git -gitlab
+inurl:/phpmyadmin/changelog.php -github -gitlab
+filetype:svn -gitlab -github inurl:"/.svn"
+username | password inurl:resources/application.properties -github.com -gitlab
+ext:ppk ssh key -github.com -gitlab
+AndroidManifest ext:xml -github -gitlab -googlesource
+"login" inurl:"account/auth" -github -gitlab -stackoverflow
+inurl:"/Admin/Login?ReturnUrl=" -github.com -gitlab.com
+"Oracle peoplesoft sign in" inurl:"cmd=login?" -github -stackoverflow -gitlab
+inurl:"cmd=auth?" -github -stackoverflow -gitlab
+dwsync.xml intitle:index of -gitlab -github
+intitle:"Sign in · GitLab"
+https://ranjaniitian.medium.com/top-devsecops-tools-for-2023-open-source-solutions-for-enterprises-7c146f80b325
+DevSecOps Tools Categories
+
+DevSecOps tools can be categorized into several groups based on their functionality. These categories include:
+
+Static Application Security Testing (SAST) Tools
+2. Dynamic Application Security Testing (DAST) Tools
+
+3. Software Composition Analysis (SCA) Tools
+
+4. Container Security Tools
+
+5. Infrastructure as Code (IaC) Security Tools
+
+6. Continuous Integration/Continuous Deployment (CI/CD) Security Tools
+
+7. Compliance and Governance Tools
+
+8. Security Dashboard and Analytics Tools
+
+
+OpenSource tools DevSecOps for different stages
+Top OpenSource tools DevSecOps for 2023
+Software Composition Analysis (SCA) Tools:
+
+OWASP Dependency-Check: OWASP Dependency-Check is a software composition analysis tool that identifies known vulnerabilities in project dependencies.
+Retire.js: Retire.js is a scanner that detects vulnerable JavaScript libraries in your web application.
+WhiteSource Bolt: WhiteSource Bolt is an open-source SCA tool that scans your project dependencies for known vulnerabilities and provides actionable remediation steps.
+Dependency-Track: Dependency-Track is an open-source platform that tracks and monitors your project’s dependencies, providing insights into their known vulnerabilities.
+OSSIndex: OSSIndex is an open-source vulnerability database and analysis platform that integrates with various development tools to provide real-time security intelligence on project dependencies
+Static Application Security Testing (SAST) Tools:
+
+SonarQube: SonarQube is an open-source platform for continuous code quality inspection that includes static code analysis for identifying security vulnerabilities.
+Bandit: Bandit is a Python-focused SAST tool that analyzes Python code for common security issues and vulnerabilities.
+SpotBugs: FindBugs is an open-source static analysis tool for Java applications that detects common coding errors, potential vulnerabilities, and performance issues.
+RIPS: RIPS is an open-source PHP security analysis tool that helps identify security vulnerabilities and coding flaws in PHP applications.
+PMD: PMD is an open-source source code analyzer for various programming languages, including Java, JavaScript, and XML, which identifies potential bugs, dead code, and security vulnerabilities.
+Dynamic Application Security Testing (DAST) Tools:
+
+OWASP ZAP: OWASP ZAP (Zed Attack Proxy) is an open-source web application security scanner that helps you identify vulnerabilities in web applications.
+Nikto: Nikto is an open-source web server scanner that performs comprehensive tests against web servers to identify potential vulnerabilities.
+Wapiti: Wapiti is an open-source web application vulnerability scanner that audits the security of web applications by performing black-box testing.
+Arachni: Arachni is an open-source, modular web application security scanner that checks for a wide range of vulnerabilities and provides comprehensive reports.
+Grabber: Grabber is an open-source web application scanner that detects security vulnerabilities by crawling and scanning web pages.
+Container Security Tools:
+
+Clair: Clair is an open-source container vulnerability scanner that analyzes container images and provides reports on known vulnerabilities.
+Trivy: Trivy is an open-source vulnerability scanner for containers and other artifacts, such as operating system packages and application dependencies. It scans container images and provides detailed reports on any vulnerabilities detected, including their severity and remediation steps.
+Anchore Engine: Anchore Engine is an open-source tool for analyzing container images for vulnerabilities, policy violations, and best practices.
+Sysdig Falco: Sysdig Falco is an open-source behavioral activity monitoring tool designed specifically for containers and Kubernetes. It detects and alerts on anomalous behavior and potential security threats in real-time. Falco uses rules and policies to define expected container behavior and raises alerts when deviations occur.
+Infrastructure Security Tools:
+
+OpenSCAP: OpenSCAP is an open-source framework for compliance checking and vulnerability management, which includes capabilities for assessing and securing infrastructure systems.
+Lynis: Lynis is an open-source security auditing tool that assesses the security configuration of Linux and Unix-based systems.
+Dagda: Dagda is an open-source container security analysis tool that performs static analysis of container images to detect security issues and vulnerabilities.
+ScoutSuite: ScoutSuite is an open-source multi-cloud security auditing tool that assesses the security posture of containerized infrastructure in public cloud environments.
+Compliance Tools:
+
+OpenSCAP: OpenSCAP is a Security Content Automation Protocol (SCAP) framework for compliance checking, vulnerability management, and measurement.
+OpenVAS: OpenVAS (Open Vulnerability Assessment System) is a full-featured vulnerability scanner that can detect security vulnerabilities in systems and networks.
+Wazuh: Wazuh is an open-source host-based intrusion detection system (HIDS) that helps with compliance monitoring, file integrity monitoring, and log analysis.
+Dashboard Tools:
+
+Grafana: Grafana is an open-source analytics and monitoring platform that allows you to create customizable dashboards for visualizing various metrics and data sources.
+Kibana: Kibana is an open-source data visualization dashboard for Elasticsearch, used for exploring, analyzing, and visualizing data stored in Elasticsearch indices.
+Metabase: Metabase is an easy-to-use open-source business intelligence and analytics tool that allows you to create dashboards and visualize data from various sources.
+Vulnerability Tracking Tools:
+
+OWASP DefectDojo: DefectDojo is an open-source vulnerability management tool that helps you track and manage vulnerabilities in your applications and infrastructure.
+TheHive: TheHive is an open-source incident response and case management platform that includes features for tracking and managing vulnerabilities.
+In conclusion, open-source tools play a crucial role in the field of cybersecurity, offering a wide range of solutions for different categories such as Software Composition Analysis (SCA), Static Application Security Testing (SAST), Dynamic Application Security Testing (DAST), Container Security, and Infrastructure Security. These tools provide valuable support in identifying vulnerabilities, assessing security risks, and ensuring compliance.
+
+However, it’s important to note that the landscape of open-source tools is dynamic, and the availability and popularity of specific tools may change over time. Open-source projects rely on community feedback and contributions for maintenance and updates, which means that their support can vary based on community involvement.
+
+Ultimately, while open-source tools offer valuable resources and cost-effective solutions for cybersecurity, it is important to approach their selection and usage with a thorough understanding of their limitations and dependencies on community support.
