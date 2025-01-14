@@ -132,3 +132,57 @@ Type c:\windows\system21\calc.exe > NK.txt:calc.exe
 Start NK.txt:calc.exe (not knows location)
 forFiles /P c:\windows\system32 /m notepad.exe /c "D:\TechWork\NK.txt:calc.exe"
 Dir /R will list out alternate data streams 
+
+gpmc.msc
+
+AD:
+Golden Ticket Attack
+
+A Golden Ticket attack allows attackers to exploit the Kerberos protocol and impersonate any account on the AD by forging a Ticket Granting Ticket (TGT). By compromising the krbtgt account and using its password hash, the attackers gain complete control over the domain for as long as the forged ticket remains valid. The attack requires four critical pieces of information to be successful:
+
+Fully Qualified Domain Name (FQDN) of the domain
+SID of the domain
+Username of an account to impersonate
+KRBTGT account password hash
+Detection for this type of attack involves monitoring for unusual activity involving the krbtgt
+
+Event ID 4768: Look for TGT requests for high-privilege accounts.
+Event ID 4672: This logs when special privileges (such as SeTcbPrivilege) are assigned to a user
+Reviewing Group Policy Objects (GPOs) is a great investigation step. In this section, we will use PowerShell to audit our GPOs.
+Get-GPO -All
+ Get-GPOReport -Name "SetWallpaper" -ReportType HTML -Path ".\SetWallpaper.html"    
+ Get-GPO -All | Where-Object { $_.ModificationTime } | Select-Object DisplayName, ModificationTime ->Lists modified GPO's
+ Event ID	Description
+4624	A user account has logged on
+4625	A user account failed to log on
+4672	Special privileges (i.e. SeTcbPrivilege) have been assigned to a user
+4768	A TGT (Kerberos) ticket was requested for a high-privileged account
+To view all locked accounts, you can use the Search-ADAccount cmdlet, applying some filters to show information such as the last time the user had successfully logged in.
+
+Search-ADAccount -LockedOut | Select-Object Name, SamAccountName, LockedOut, LastLogonDate, DistinguishedName
+Additionally, a great way to quickly review the user accounts present on a domain, as well as their group membership, is by using the Get-ADUser
+Get-ADUser -Filter * -Properties MemberOf | Select-Object Name, SamAccountName, @{Name="Groups";Expression={$_.MemberOf}}
+
+On a Windows Server, this history file  is located at %APPDATA%\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt.
+Additionally, logs are recorded for every PowerShell process executed on a system. These logs are located within the Event Viewer under 
+Application and Services Logs -> Microsoft -> Windows -> PowerShell -> Operational or also under Application and Service Logs -> 
+Windows PowerShell. The logs have a wealth of information useful for incident response.
+azure bash shell-
+az ad signed-in-user show
+Entra ID Enumeration
+Using the current account, let's start by listing all the users in the tenant. 
+az ad user list
+The Azure CLI typically uses the following command syntax: az GROUP SUBGROUP ACTION OPTIONAL_PARAMETERS. Given this, the command above can be broken down into:
+
+Target group or service: ad (Azure AD or Entra ID)
+Target subgroup: user (Azure AD users)
+Action: list
+Note: To see the available commands, you may execute az -h or az GROUP -h.
+az ad user list --filter "startsWith('wvusr-', displayName)"
+az ad group list
+ az account clear
+ az login -u EMAIL -p PASSWORD
+ az role assignment list --assignee REPLACE_WITH_SECRET_RECOVERY_GROUP_ID --all
+ az keyvault list
+ az keyvault secret list --vault-name warevillesecrets
+  az keyvault secret show --vault-name warevillesecrets --name REDACTED .Replace the value of the --name parameter with the actual secret name
