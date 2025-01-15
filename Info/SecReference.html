@@ -186,3 +186,16 @@ az ad group list
  az keyvault list
  az keyvault secret list --vault-name warevillesecrets
   az keyvault secret show --vault-name warevillesecrets --name REDACTED .Replace the value of the --name parameter with the actual secret name
+splunk:
+index=* in the search bar to show all ingested logs
+index=* sourcetype=cctv_logs  (-based on name add from the previous results)
+Add Extract Fields to properly read format. Select item and add
+sample regex for extracting - ^(?P<timestamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+)\s+(?P<Event>(Login\s\w+|\w+))\s+(?P<user_id>\d+)?\s?(?P<UserName>\w+)\s+.*?(?P<Session_id>\w+)$
+    index=cctv_feed | stats count by Event
+    index=cctv_feed | stats count(Event) by UserName
+    index=cctv_feed | rare Event  cctv_feed is my own index name created using extracts above
+    index=cctv_feed *failed* | table _time UserName Event Session_id
+    index=cctv_feed *put_Session_id_here* | table _time UserName Event Session_id
+    index=cctv_feed *Delete*
+    index=web_logs *rij5uu4gt204q0d3eb7jj86okt*
+    index=web_logs clientip="10.11.105.33" | table _time clientip status uri ur_path file
