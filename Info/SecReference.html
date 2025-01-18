@@ -226,4 +226,48 @@ Then, on the WareWise application, let's provide a command that will lead to the
     frida-trace ./main -i '*' here main is your app
     You will now see the __handlers__ directory, containing JavaScript files for each function your application calls from a library. 
     frida-trace ./TryUnlockMe -i 'libaocgame.so!*'
+    Windows binaries follow the Portable Executable (PE) structure, whereas on Linux, binaries follow the Executable and Linkable Format (ELF). This is why, for example, you cannot run a .exe file on MacOS. With that said, all binaries will contain at least:
+
+A code section: This section contains the instructions that the CPU will execute
+A data section: This section contains information such as variables, resources (images, other data), etc
+Import/Export tables: These tables reference additional libraries used (imported) or exported by the binary. Binaries often rely on libraries to perform functions. For example, interacting with the Windows API to manipulate files
+https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#section-table-section-headers
+    private static void Main(string[] args)
+{
+	Console.WriteLine("Hello THM DEMO Binary");
+	Thread.Sleep(5000);
+	string address = "http://10.10.10.10/img/tryhackme_connect.png";
+	string text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "thm-demo.png");
+	using (WebClient webClient = new WebClient())
+	{
+		try
+		{
+			Console.WriteLine("Downloading file...");
+			webClient.DownloadFile(address, text);
+			Console.WriteLine("File downloaded to: " + text);
+			Process.Start(new ProcessStartInfo(text)
+			{
+				UseShellExecute = true
+			});
+			Console.WriteLine("Image opened successfully.");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine("An error occurred: " + ex.Message);
+		}
+	}
+	Console.WriteLine("Bye Bye leaving Demo Binary");
+	Thread.Sleep(5000);
+}
+kuberneties-
+    minikube start
+    You can verify that the cluster is up and running using the following command
+    kubectl get pods -n wareville
+    Connect to the pod using the following command:
+    kubectl exec -n wareville naughty-or-nice -it -- /bin/bash
+MQTT stands for Message Queuing Telemetry Transport. It is a language very commonly used in IoT devices 
+    for communication purposes. It works on a publish/subscribe model, where any client device can publish 
+    messages, and other client devices can subscribe to the messages if they are related to a topic of interest. 
+    An MQTT broker connects the different clients, publishing and subscribing to messages.   
+    
     
