@@ -1,0 +1,41 @@
+﻿syntax = "proto3";
+import "google/protobuf/empty.proto";
+service FileProcessing {
+  rpc UploadFile (stream FileChunk) returns (ProcessingResponse);
+  rpc GetStatus (StatusRequest) returns (StatusResponse);
+  rpc DownloadFile (DownloadRequest) returns (stream FileChunk);
+  rpc GetRecentSessions (google.protobuf.Empty) returns (RecentSessionsResponse);
+}
+message RecentSession {
+  string sessionId = 1;
+  string status = 2;
+  string ip = 3;
+}
+
+message RecentSessionsResponse {
+  repeated RecentSession sessions = 1;
+}
+message FileChunk {
+  bytes data = 1;
+  string fileName = 2;
+  string sessionId = 3;
+}
+
+message ProcessingResponse {
+  string sessionId = 1;
+  string message = 2;
+}
+
+message StatusRequest {
+  string sessionId = 1;
+}
+
+message StatusResponse {
+  string status = 1;
+  string zipFileName = 2;
+  string Progress =3;
+}
+
+message DownloadRequest {
+  string sessionId = 1;
+}
