@@ -1,0 +1,170 @@
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Net.Mime;
+using System.Threading.Tasks;
+
+namespace FileDownloadApi.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FileDownloadController : ControllerBase
+    {
+        private const string FilePath = "path/to/your/largefile.zip"; // Replace with your actual file path
+
+        [HttpGet("download")]
+        public async Task<IActionResult> DownloadFileAsync()
+        {
+            var fileInfo = new FileInfo(FilePath);
+            if (!fileInfo.Exists)
+            {
+                return NotFound();
+            }
+
+            var fileLength = fileInfo.Length;
+            var rangeHeader = Request.Headers["Range"].ToString();
+
+            // If no Range header is provided, default to the entire file
+            if (string.IsNullOrEmpty(rangeHeader))
+            {
+                rangeHeader = $"bytes=0-{fileLength - 1}";
+            }
+
+            // Parse the Range header to get the byte range
+            var range = ParseRangeHeader(rangeHeader, fileLength);
+
+            if (!range.HasValue)
+            {
+                return BadRequest("Invalid range");
+            }
+
+            var startByte = range.Value.start;
+            var endByte = range.Value.end;
+
+            var fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            // Set the position to the start of the chunk we want to serve
+            fileStream.Seek(startByte, SeekOrigin.Begin);
+
+            var buffer = new byte[endByte - startByte + 1];
+            await fileStream.ReadAsync(buffer, 0, buffer.Length);
+
+            var contentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(startByte, endByte, fileLength);
+            Response.Headers.Add("Content-Range", contentRange.ToString());
+            Response.StatusCode = 206; // Partial Content
+
+            // Return the chunk as a ZIP file
+            return File(buffer, "application/zip", fileInfo.Name);
+        }
+
+        private (long start, long end)? ParseRangeHeader(string rangeHeader, long fileLength)
+        {
+            // Example of Range header: "bytes=0-999"
+            if (rangeHeader.StartsWith("bytes="))
+            {
+                var range = rangeHeader.Substring(6);
+                var rangeParts = range.Split('-');
+
+                if (rangeParts.Length == 2)
+                {
+                    if (long.TryParse(rangeParts[0], out var startByte) &&
+                        (string.IsNullOrEmpty(rangeParts[1]) || long.TryParse(rangeParts[1], out var endByte)))
+                    {
+                        // If the end byte is not provided, set it to the file's end
+                        if (string.IsNullOrEmpty(rangeParts[1]))
+                        {
+                            endByte = fileLength - 1;
+                        }
+
+                        // Ensure the range is within the file size
+                        if (startByte >= 0 && startByte <= endByte && endByte < fileLength)
+                        {
+                            return (startByte, endByte);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }
+}
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const DownloadFileInChunks = () => {
+  const [progress, setProgress] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [fileName, setFileName] = useState('large-file.zip'); // You can set the default filename
+  const [downloadedChunks, setDownloadedChunks] = useState([]);
+
+  const CHUNK_SIZE = 1024 * 1024; // 1MB per chunk
+
+  const downloadFile = async (url) => {
+    setIsDownloading(true);
+    setDownloadedChunks([]);
+    
+    // Get the file size
+    let fileSize = 0;
+    try {
+      const response = await axios.head(url);
+      fileSize = parseInt(response.headers['content-length']);
+    } catch (error) {
+      console.error('Error getting file size:', error);
+      setIsDownloading(false);
+      return;
+    }
+
+    const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
+
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * CHUNK_SIZE;
+      const end = Math.min((i + 1) * CHUNK_SIZE - 1, fileSize - 1);
+      const range = `bytes=${start}-${end}`;
+
+      try {
+        const response = await axios.get(url, {
+          headers: { Range: range },
+          responseType: 'arraybuffer', // Important for binary data
+          onDownloadProgress: (progressEvent) => {
+            if (progressEvent.lengthComputable) {
+              const progress = (progressEvent.loaded / progressEvent.total) * 100;
+              setProgress(((i + progress) / totalChunks) * 100);
+            }
+          }
+        });
+
+        // Combine the chunks
+        setDownloadedChunks(prevChunks => [
+          ...prevChunks,
+          response.data
+        ]);
+      } catch (error) {
+        console.error('Error downloading chunk:', error);
+        setIsDownloading(false);
+        return;
+      }
+    }
+
+    // Once all chunks are downloaded, combine them into a single blob
+    const fileBlob = new Blob(downloadedChunks, { type: 'application/zip' });
+
+    // Create a download link for the user
+    const urlObject = URL.createObjectURL(fileBlob);
+    const a = document.createElement('a');
+    a.href = urlObject;
+    a.download = fileName;
+    a.click();
+
+    setIsDownloading(false);
+  };
+
+  return (
+    <div>
+      <button onClick={() => downloadFile('http://localhost:5000/api/filedownload/download')}>
+        {isDownloading ? 'Downloading...' : 'Download File'}
+      </button>
+      {isDownloading && <div>Progress: {Math.round(progress)}%</div>}
+    </div>
+  );
+};
+
+export default DownloadFileInChunks;
