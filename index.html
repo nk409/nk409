@@ -1,83 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NKSicherheit Implentation Useful Links</title>
-    <link rel="stylesheet" href="Info/mainstyles.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Personal Tracker Board</title>
+
+<!-- Bootstrap & Sortable.js -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+  body {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb, #8e2de2, #4a00e0);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .board {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 40px;
+    flex-wrap: wrap;
+  }
+
+  .column {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 18px;
+    width: 320px;
+    min-height: 520px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .column:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  }
+
+  .column h4 {
+    text-align:center;
+    font-weight:600;
+    margin-bottom:14px;
+  }
+
+  .task-list { min-height: 40px; }
+
+  .task {
+    background: rgba(255,255,255,0.95);
+    color: #222;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    cursor: grab;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .task:active {
+    cursor: grabbing;
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+
+  .delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #888;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .delete-btn:hover {
+    color: #6f42c1;
+  }
+
+  .task .task-text {
+    outline: none;
+    min-height: 18px;
+    font-weight: 600;
+    margin-right: 24px;
+  }
+
+  .task .task-meta {
+    font-size: 12px;
+    color: #666;
+    margin-top:6px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 10px;
+  }
+
+  .add-task {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border: 1px dashed rgba(255,255,255,0.35);
+    border-radius: 12px;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s ease;
+  }
+
+  .add-task:hover {
+    background: rgba(255,255,255,0.28);
+  }
+
+  .dragging {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+
+  /* Soft Modal Theme */
+  .modal-content {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    color: #fff;
+  }
+
+  .modal-header {
+    background: rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .btn-glass {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-glass:hover {
+    background: rgba(255,255,255,0.35);
+  }
+
+  .btn-primary-glow {
+    background: linear-gradient(135deg, #9b73ff, #6e8efb);
+    color: #fff;
+    border: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 10px rgba(155,115,255,0.5);
+  }
+
+  .btn-primary-glow:hover {
+    box-shadow: 0 0 16px rgba(155,115,255,0.9);
+    transform: scale(1.03);
+  }
+</style>
 </head>
 <body>
-    <header>
-        <img src="Info/githublogo.png" alt="logo" class="logo">
-        <nav>
-            <input type="checkbox" name="ham" id="ham" class="ham">
-            <label for="ham" class="ham-icon">
-                <i class="fa-solid fa-bars"></i>
-            </label>
-            
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="About.html">About</a></li>                              
-            </ul>
-        </nav>
-    </header>
-    <section>
-        <div>
-            <ul>
-                <li> 
-                    <a href="Info/BSindex.html" class="start">Bootstrap 5 Samples</a> 
-                </li>
-                <li></li>
-                <li><a href="Info/BS543.html" class="start">Bootstrap 5 Advanced Samples</a> </li>
-                <li><a href="Info/QuizApp.html" class="start">Simple QuizApp</a> </li>
-                <li><a href="Info/PSQuizApp.html" class="start">Load Available Quiz </a>   </li>
-                <li><a href="https://netninja-marioplan-ea10d.firebaseapp.com/" class="start">Project Planner Tracke(React) </a>   </li>
-                <li>credentials: test@test.com pwd: 123456</li>
-                <li><a href="https://nkng12moviebrowser.web.app/home" class="start">Movie Browser (Firebase) </a>   </li>
-                <li>
-                    Dynamic URL's for movie browser                
-                </li>
-                <li>
-                    https://bootswatch.com/5/quartz/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/sandstone/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/pulse/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/cerulean/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/cosmo/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/cyborg/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/darkly/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/flatly/bootstrap.min.css <br/>
-                    https://bootswatch.com/5/journal/bootstrap.min.css <br/>
-https://bootswatch.com/5/litera/bootstrap.min.css  <br/>
-https://bootswatch.com/5/lumen/bootstrap.min.css  <br/>
-https://bootswatch.com/5/lux/bootstrap.min.css  <br/>
-https://bootswatch.com/5/materia/bootstrap.min.css  <br/>
-https://bootswatch.com/5/minty/bootstrap.min.css  <br/>
-https://bootswatch.com/5/morph/bootstrap.min.css  <br/>
-https://bootswatch.com/5/pulse/bootstrap.min.css  <br/>
-https://bootswatch.com/5/quartz/bootstrap.min.css  <br/>
-https://bootswatch.com/5/sandstone/bootstrap.min.css  <br/>
-https://bootswatch.com/5/simplex/bootstrap.min.css  <br/>
-https://bootswatch.com/5/sketchy/bootstrap.min.css  <br/>
-https://bootswatch.com/5/slate/bootstrap.min.css  <br/>
-https://bootswatch.com/5/solar/bootstrap.min.css  <br/>
-https://bootswatch.com/5/spacelab/bootstrap.min.css  <br/>
-https://bootswatch.com/5/superhero/bootstrap.min.css  <br/>
-https://bootswatch.com/5/united/bootstrap.min.css  <br/>
-https://bootswatch.com/5/vapor/bootstrap.min.css  <br/>
-https://bootswatch.com/5/yeti/bootstrap.min.css  <br/>
-https://bootswatch.com/5/zephyr/bootstrap.min.css  <br/>
 
+<div class="text-center py-3">
+    <h2>⭐ Daily Activity Tracker ⭐</h2>
+    <p>Drag & drop tasks — Resets when you close the browser</p>
+    <h4><a href="Samples.html">Additional Samples</a> </h4>
+    <h4><a href="About.html">About</a></h4>
+  </div>
 
-                </li>
-            </ul>
-        </div>
-        <div>
-            <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=1164270" style='border:none;'></iframe>
-        </div>
-    </section>    
-    <footer>
-        <img src="Info/Back.JPG" alt="Author">        
-    </footer>
+<div class="board" id="board">
+  <div class="column" data-status="todo">
+    <h4>To Do</h4>
+    <div class="task-list" id="todo"></div>
+    <div class="add-task" onclick="openAddTaskModal('todo')">+ Add Task</div>
+  </div>
+
+  <div class="column" data-status="doing">
+    <h4>In Progress</h4>
+    <div class="task-list" id="doing"></div>
+    <div class="add-task" onclick="openAddTaskModal('doing')">+ Add Task</div>
+  </div>
+
+  <div class="column" data-status="done">
+    <h4>Completed</h4>
+    <div class="task-list" id="done"></div>
+    <div class="add-task" onclick="openAddTaskModal('done')">+ Add Task</div>
+  </div>
+</div>
+
+<!-- Soft Themed Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <h5 class="modal-title w-100">Delete Task?</h5>
+      </div>
+      <div class="modal-body fs-5">
+        Are you sure you want to remove this task from your board?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-glass" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmDelete" class="btn btn-primary-glow">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <h5 class="modal-title w-100">✨ Add a New Task</h5>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="taskInput" class="form-control text-center bg-transparent text-white border-light"
+          placeholder="Enter task title..." autofocus>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-glass" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmAddTask" class="btn btn-primary-glow">Add Task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const lists = ['todo','doing','done'];
+let taskToDelete = null;
+let currentAddList = null;
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+const addTaskModal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+
+function makeTask(text) {
+  const task = document.createElement('div');
+  task.className = 'task';
+  task.setAttribute('draggable','true');
+  task.innerHTML = `
+    <i class="bi bi-x-circle delete-btn" title="Delete"></i>
+    <span class="badge bg-info">Task</span>
+    <div class="task-text mt-2" contenteditable="true">${escapeHtml(text)}</div>
+    <div class="task-meta">Double-click to edit • Drag to move • Click ❌ to delete</div>
+  `;
+
+  const txt = task.querySelector('.task-text');
+  txt.addEventListener('input', saveTasks);
+  txt.addEventListener('focus', () => task.draggable = false);
+  txt.addEventListener('blur', () => task.draggable = true);
+
+  const delBtn = task.querySelector('.delete-btn');
+  delBtn.addEventListener('click', () => {
+    taskToDelete = task;
+    deleteModal.show();
+  });
+
+  return task;
+}
+
+document.getElementById('confirmDelete').addEventListener('click', () => {
+  if (taskToDelete) {
+    taskToDelete.remove();
+    saveTasks();
+    taskToDelete = null;
+  }
+  deleteModal.hide();
+});
+
+function escapeHtml(str) {
+  return str.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function unescapeHtml(str) {
+  return str.replaceAll("&amp;","&").replaceAll("&lt;","<").replaceAll("&gt;",">");
+}
+
+function createTaskElement(text, list) {
+  document.getElementById(list).appendChild(makeTask(text));
+}
+
+function openAddTaskModal(list) {
+  currentAddList = list;
+  document.getElementById('taskInput').value = '';
+  addTaskModal.show();
+}
+
+document.getElementById('confirmAddTask').addEventListener('click', () => {
+  const text = document.getElementById('taskInput').value.trim();
+  if (text) {
+    createTaskElement(text, currentAddList);
+    saveTasks();
+    addTaskModal.hide();
+  }
+});
+
+function loadTasks() {
+  let data = JSON.parse(sessionStorage.getItem('tasksBoard') || '{}');
+  const empty = !Object.keys(data).length;
+
+  if (empty) {
+    data = {
+      todo: [
+        { text: "📚 Study algebra chapter 3" },
+        { text: "🛒 Buy groceries" },
+        { text: "🧠 Brainstorm app ideas" }
+      ],
+      doing: [
+        { text: "💻 Build personal portfolio" },
+        { text: "📄 Update résumé" }
+      ],
+      done: [
+        { text: "☀️ Morning exercise" },
+        { text: "📧 Check emails" }
+      ]
+    };
+    sessionStorage.setItem('tasksBoard', JSON.stringify(data));
+  }
+
+  lists.forEach(list => {
+    const container = document.getElementById(list);
+    container.innerHTML = '';
+    (data[list] || []).forEach(task => createTaskElement(unescapeHtml(task.text), list));
+  });
+}
+
+function saveTasks() {
+  const data = {};
+  lists.forEach(list => {
+    const container = document.getElementById(list);
+    const items = Array.from(container.children).map(card => ({
+      text: escapeHtml(card.querySelector('.task-text').innerText.trim())
+    })).filter(i => i.text.length > 0);
+    data[list] = items;
+  });
+  sessionStorage.setItem('tasksBoard', JSON.stringify(data));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTasks();
+
+  lists.forEach(list => {
+    new Sortable(document.getElementById(list), {
+      group: 'shared',
+      animation: 180,
+      ghostClass: 'dragging',
+      draggable: '.task',
+      onEnd: () => saveTasks()
+    });
+  });
+});
+</script>
 </body>
 </html>
