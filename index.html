@@ -173,6 +173,9 @@
     box-shadow: 0 0 16px rgba(155,115,255,0.9);
     transform: scale(1.03);
   }
+  a{
+      color: white;
+  }
 </style>
 </head>
 <body>
@@ -180,8 +183,6 @@
 <div class="text-center py-3">
     <h2>⭐ Daily Activity Tracker ⭐</h2>
     <p>Drag & drop tasks — Resets when you close the browser</p>
-    <h4><a href="Samples.html">Additional Samples</a> </h4>
-    <h4><a href="About.html">About</a></h4>
   </div>
 
 <div class="board" id="board">
@@ -201,6 +202,10 @@
     <h4>Completed</h4>
     <div class="task-list" id="done"></div>
     <div class="add-task" onclick="openAddTaskModal('done')">+ Add Task</div>
+  </div>
+  <div class="text-center py-3">    
+    <h4><a href="Samples.html">Additional Samples</a> </h4>
+    <h4><a href="About.html">About</a></h4>
   </div>
 </div>
 
@@ -316,16 +321,16 @@ function loadTasks() {
   if (empty) {
     data = {
       todo: [
-        { text: "📚 Study algebra chapter 3" },
-        { text: "🛒 Buy groceries" },
+        { text: "📚 Study InfoQ articles" },
+        { text: "🛒 Shop E-Courses" },
         { text: "🧠 Brainstorm app ideas" }
       ],
       doing: [
         { text: "💻 Build personal portfolio" },
-        { text: "📄 Update résumé" }
+        { text: "📄 Update profile" }
       ],
       done: [
-        { text: "☀️ Morning exercise" },
+        { text: "☀️ Morning Yoga" },
         { text: "📧 Check emails" }
       ]
     };
