@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Tutor — AI Powered</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design tokens ── */
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f4;
+      --bg-info: #e6f1fb;
+      --bg-success: #eaf3de;
+      --bg-warning: #faeeda;
+      --bg-danger: #fcebeb;
+      --text: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --text-info: #185fa5;
+      --text-success: #3b6d11;
+      --text-warning: #854f0b;
+      --text-danger: #a32d2d;
+      --border: rgba(0,0,0,0.12);
+      --border-md: rgba(0,0,0,0.22);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --bg-secondary: #2c2c2e;
+        --bg-info: #0c2a45;
+        --bg-success: #173404;
+        --bg-warning: #412402;
+        --bg-danger: #3a1010;
+        --text: #f0f0f0;
+        --text-secondary: #a0a0a0;
+        --text-info: #85b7eb;
+        --text-success: #97c459;
+        --text-warning: #ef9f27;
+        --text-danger: #f09595;
+        --border: rgba(255,255,255,0.12);
+        --border-md: rgba(255,255,255,0.22);
+      }
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .app {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header { margin-bottom: 1.5rem; }
+    .header h1 { font-size: 22px; font-weight: 600; color: var(--text); }
+    .header p  { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+    .top-bar   { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .streak-pill { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: var(--bg-warning); color: var(--text-warning); font-weight: 600; }
+    .solved-label { font-size: 12px; color: var(--text-secondary); }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1.5rem; width: fit-content; }
+    .tab  { font-size: 13px; padding: 7px 20px; background: transparent; border: none; border-right: 0.5px solid var(--border-md); cursor: pointer; color: var(--text-secondary); font-family: var(--font); }
+    .tab:last-child { border-right: none; }
+    .tab.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── Controls ── */
+    .ai-suggest-bar {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 9px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-height: 38px;
+      line-height: 1.5;
+    }
+    .ai-suggest-bar strong { color: var(--text); font-weight: 600; }
+
+    .controls { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .diff-btn {
+      font-size: 13px; padding: 6px 15px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text-secondary); font-family: var(--font);
+    }
+    .diff-btn.active { background: var(--bg-info); color: var(--text-info); border-color: transparent; font-weight: 600; }
+    .topic-select {
+      font-size: 13px; padding: 6px 12px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: var(--bg);
+      color: var(--text); font-family: var(--font); cursor: pointer;
+    }
+    .gen-btn {
+      font-size: 13px; padding: 6px 16px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text); font-family: var(--font); margin-left: auto;
+      transition: background .15s;
+    }
+    .gen-btn:hover { background: var(--bg-secondary); }
+
+    /* ── Timer ── */
+    .timer-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+    .toggle-label { font-size: 13px; color: var(--text-secondary); }
+    .toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider-t { position: absolute; inset: 0; background: var(--border-md); border-radius: 20px; cursor: pointer; transition: .2s; }
+    .slider-t::before { content:''; position: absolute; width: 14px; height: 14px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    input:checked + .slider-t { background: #378ADD; }
+    input:checked + .slider-t::before { transform: translateX(16px); }
+    .timer-duration {
+      font-size: 13px; padding: 5px 10px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: var(--bg);
+      color: var(--text); display: none; font-family: var(--font);
+    }
+    .timer-display {
+      font-size: 14px; font-weight: 600; padding: 4px 14px; border-radius: 20px;
+      background: var(--bg-secondary); color: var(--text); min-width: 64px;
+      text-align: center; display: none;
+    }
+    .timer-display.show   { display: inline-block; }
+    .timer-display.urgent { background: var(--bg-danger); color: var(--text-danger); }
+
+    /* ── Problem card ── */
+    .problem-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      min-height: 110px;
+    }
+    .problem-meta  { display: flex; gap: 6px; align-items: center; margin-bottom: 10px; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    .badge-easy    { background: var(--bg-success); color: var(--text-success); }
+    .badge-medium  { background: var(--bg-warning); color: var(--text-warning); }
+    .badge-hard    { background: var(--bg-danger);  color: var(--text-danger);  }
+    .badge-topic   { background: var(--bg-secondary); color: var(--text-secondary); }
+    .problem-text  { font-size: 15px; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+
+    /* ── Loading dots ── */
+    .loading-dots { display: inline-flex; gap: 3px; align-items: center; }
+    .loading-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.2s infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: .2s; }
+    .loading-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+
+    /* ── Answer section ── */
+    .answer-row   { display: flex; gap: 8px; }
+    .answer-input {
+      flex: 1; font-size: 15px; padding: 9px 13px;
+      border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
+      background: var(--bg); color: var(--text); font-family: var(--font);
+    }
+    .answer-input:focus { outline: none; box-shadow: 0 0 0 2px #378ADD55; border-color: #378ADD; }
+    .check-btn {
+      font-size: 14px; padding: 9px 20px; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-md); background: var(--bg);
+      cursor: pointer; color: var(--text); white-space: nowrap; font-family: var(--font);
+      transition: background .15s;
+    }
+    .check-btn:hover     { background: var(--bg-secondary); }
+    .check-btn:disabled  { opacity: .4; cursor: not-allowed; }
+    .action-row  { display: flex; gap: 8px; margin-top: 8px; }
+    .hint-btn, .sol-btn {
+      font-size: 13px; padding: 5px 15px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text-secondary); font-family: var(--font);
+      transition: background .15s;
+    }
+    .hint-btn:hover, .sol-btn:hover { background: var(--bg-secondary); }
+    .hint-btn:disabled, .sol-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+    /* ── Feedback ── */
+    .feedback-box {
+      border-radius: var(--radius-md); padding: 10px 14px;
+      font-size: 14px; line-height: 1.65; margin-top: 10px; white-space: pre-wrap;
+    }
+    .fb-correct  { background: var(--bg-success); color: var(--text-success); }
+    .fb-wrong    { background: var(--bg-danger);  color: var(--text-danger);  }
+    .fb-hint     { background: var(--bg-info);    color: var(--text-info);    }
+    .fb-sol      { background: var(--bg-secondary); color: var(--text); border: 0.5px solid var(--border); }
+
+    /* ── Stats ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1.5rem; }
+    .stat-card  { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px; text-align: center; }
+    .stat-val   { font-size: 24px; font-weight: 700; color: var(--text); }
+    .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* ── Performance tab ── */
+    .perf-header  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .perf-title   { font-size: 15px; font-weight: 600; }
+    .analyze-btn  {
+      font-size: 13px; padding: 6px 16px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text); font-family: var(--font);
+      transition: background .15s;
+    }
+    .analyze-btn:hover    { background: var(--bg-secondary); }
+    .analyze-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .legend       { display: flex; gap: 16px; margin-bottom: 1rem; }
+    .legend-item  { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+    .legend-dot   { width: 10px; height: 10px; border-radius: 50%; }
+    .topic-row    { margin-bottom: 16px; }
+    .topic-name   { font-size: 13px; color: var(--text); margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .topic-acc    { font-size: 12px; color: var(--text-secondary); }
+    .bar-track    { height: 10px; background: var(--bg-secondary); border-radius: 6px; overflow: hidden; position: relative; }
+    .bar-fill     { height: 100%; border-radius: 6px; transition: width .5s ease; position: absolute; left: 0; top: 0; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
+    .summary-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px 14px; }
+    .summary-card-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+    .summary-card-val   { font-size: 15px; font-weight: 600; color: var(--text); }
+    .no-data { font-size: 14px; color: var(--text-secondary); text-align: center; padding: 3rem 0; }
+
+    /* ── AI Analysis card ── */
+    .ai-analysis-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1.5rem; }
+    .ai-analysis-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .ai-analysis-body  { font-size: 14px; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
+    .ai-analysis-body.streaming { border-right: 2px solid var(--text-secondary); animation: cursor-blink .7s infinite; }
+    @keyframes cursor-blink { 0%,100%{border-color:transparent} 50%{border-color:var(--text-secondary)} }
+
+    /* ── Coach tab ── */
+    .coach-intro { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.65; }
+    .quick-prompts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+    .qp-btn {
+      font-size: 12px; padding: 5px 13px; border-radius: 20px;
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text-secondary); font-family: var(--font);
+      transition: background .15s;
+    }
+    .qp-btn:hover { background: var(--bg-secondary); color: var(--text); }
+    .chat-window  { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
+    .chat-messages { padding: 1rem; min-height: 240px; max-height: 360px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+    .msg { display: flex; gap: 8px; align-items: flex-start; }
+    .msg-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-top: 2px; }
+    .msg-user .msg-avatar { background: var(--bg-info);      color: var(--text-info); }
+    .msg-ai   .msg-avatar { background: var(--bg-secondary); color: var(--text-secondary); }
+    .msg-bubble { font-size: 14px; line-height: 1.6; color: var(--text); padding: 9px 13px; border-radius: var(--radius-md); max-width: calc(100% - 40px); white-space: pre-wrap; }
+    .msg-user .msg-bubble { background: var(--bg-info); color: var(--text-info); }
+    .msg-user { flex-direction: row-reverse; }
+    .msg-ai   .msg-bubble { background: var(--bg-secondary); }
+    .chat-input-row {
+      display: flex; gap: 8px; border-top: 0.5px solid var(--border);
+      padding: 10px; background: var(--bg);
+    }
+    .chat-input {
+      flex: 1; font-size: 14px; padding: 8px 11px;
+      border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
+      background: var(--bg); color: var(--text); font-family: var(--font);
+    }
+    .chat-input:focus { outline: none; box-shadow: 0 0 0 2px #378ADD55; border-color: #378ADD; }
+    .send-btn {
+      font-size: 13px; padding: 8px 18px; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-md); background: transparent;
+      cursor: pointer; color: var(--text); font-family: var(--font);
+      white-space: nowrap; transition: background .15s;
+    }
+    .send-btn:hover    { background: var(--bg-secondary); }
+    .send-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .reset-btn { font-size: 12px; color: var(--text-secondary); border: none; background: transparent; cursor: pointer; text-decoration: underline; margin-top: 1rem; display: block; }
+    .empty-state { font-size: 14px; color: var(--text-secondary); text-align: center; padding: 2rem 0; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ════ HEADER ════ -->
+  <div class="header">
+    <h1>Math tutor — AI powered</h1>
+    <p>Problems generated by AI &nbsp;·&nbsp; Answers verified by AI &nbsp;·&nbsp; Coached by AI</p>
+    <div class="top-bar">
+      <span class="streak-pill" id="streak-pill">0 day streak</span>
+      <span class="solved-label" id="solved-label">0 solved today</span>
+    </div>
+  </div>
+
+  <!-- ════ TABS ════ -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('practice', this)">Practice</button>
+    <button class="tab" onclick="switchTab('performance', this)">Performance</button>
+    <button class="tab" onclick="switchTab('coach', this)">AI Coach</button>
+  </div>
+
+  <!-- ════ PRACTICE TAB ════ -->
+  <div id="tab-practice" class="section active">
+
+    <!-- AI suggestion bar -->
+    <div class="ai-suggest-bar" id="suggest-bar">
+      <span style="font-size:14px;flex-shrink:0;margin-top:1px">◆</span>
+      <span id="suggest-text">Generate a problem to get AI-powered topic suggestions.</span>
+    </div>
+
+    <!-- Difficulty + topic + generate -->
+    <div class="controls">
+      <button class="diff-btn active" onclick="setDiff('Easy', this)">Easy</button>
+      <button class="diff-btn"        onclick="setDiff('Medium', this)">Medium</button>
+      <button class="diff-btn"        onclick="setDiff('Hard', this)">Hard</button>
+      <select class="topic-select" id="topic-select">
+        <option>Algebra</option>
+        <option>Arithmetic</option>
+        <option>Geometry</option>
+        <option>Probability</option>
+        <option>Number Theory</option>
+        <option>Calculus</option>
+        <option>Logic &amp; Puzzles</option>
+      </select>
+      <button class="gen-btn" onclick="generateProblem()">New problem ↻</button>
+    </div>
+
+    <!-- Optional timer -->
+    <div class="timer-row">
+      <span class="toggle-label">Timer</span>
+      <label class="toggle">
+        <input type="checkbox" id="timer-toggle" onchange="onTimerToggle()">
+        <span class="slider-t"></span>
+      </label>
+      <select class="timer-duration" id="timer-dur" onchange="resetTimerDisplay()">
+        <option value="60">1 min</option>
+        <option value="120" selected>2 min</option>
+        <option value="180">3 min</option>
+        <option value="300">5 min</option>
+      </select>
+      <span class="timer-display" id="timer-display">2:00</span>
+    </div>
+
+    <!-- Problem display -->
+    <div class="problem-card" id="problem-card">
+      <div class="empty-state">Press "New problem ↻" to begin.</div>
+    </div>
+
+    <!-- Answer + actions -->
+    <div id="answer-section" style="display:none">
+      <div class="answer-row">
+        <input class="answer-input" id="answer-input" type="text"
+               placeholder="Type your answer here..."
+               onkeydown="if(event.key==='Enter') checkAnswer()" />
+        <button class="check-btn" id="check-btn" onclick="checkAnswer()">Check</button>
+      </div>
+      <div class="action-row">
+        <button class="hint-btn" id="hint-btn" onclick="getHint()">Get a hint</button>
+        <button class="sol-btn"  id="sol-btn"  onclick="getSolution()">Show solution</button>
+      </div>
+      <div id="feedback"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="s-solved">0</div><div class="stat-label">solved</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-correct">0</div><div class="stat-label">correct</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-streak">0</div><div class="stat-label">day streak</div></div>
+    </div>
+  </div>
+
+  <!-- ════ PERFORMANCE TAB ════ -->
+  <div id="tab-performance" class="section">
+    <div class="perf-header">
+      <span class="perf-title">Topic-wise performance</span>
+      <button class="analyze-btn" id="analyze-btn" onclick="runAIAnalysis()">◆ AI analysis</button>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Correct</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#378ADD;opacity:.35"></div>Attempted</div>
+    </div>
+    <div id="chart-rows"></div>
+    <div class="ai-analysis-card" id="ai-analysis-card" style="display:none">
+      <div class="ai-analysis-label">◆ AI performance analysis</div>
+      <div class="ai-analysis-body" id="ai-analysis-body"></div>
+    </div>
+    <button class="reset-btn" onclick="resetStats()">Reset all data</button>
+  </div>
+
+  <!-- ════ AI COACH TAB ════ -->
+  <div id="tab-coach" class="section">
+    <p class="coach-intro">
+      Ask the AI coach anything — about your weak topics, how to approach a concept,
+      or for a custom study plan. The coach has full visibility of your performance data.
+    </p>
+    <div class="quick-prompts">
+      <button class="qp-btn" onclick="quickPrompt('What topics should I focus on based on my performance?')">What to focus on?</button>
+      <button class="qp-btn" onclick="quickPrompt('Give me a 7-day study plan for my weakest topics.')">7-day study plan</button>
+      <button class="qp-btn" onclick="quickPrompt('Explain Algebra in simple terms with an example.')">Explain Algebra</button>
+      <button class="qp-btn" onclick="quickPrompt('How can I improve my accuracy in Geometry?')">Improve Geometry</button>
+      <button class="qp-btn" onclick="quickPrompt('What are common mistakes in Probability?')">Probability tips</button>
+    </div>
+    <div class="chat-window">
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg msg-ai">
+          <div class="msg-avatar">AI</div>
+          <div class="msg-bubble">
+            Hi! I'm your math coach. Ask me anything — I can see your performance data and tailor advice to your exact strengths and weaknesses.
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" type="text"
+               placeholder="Ask your coach..."
+               onkeydown="if(event.key==='Enter') sendChat()" />
+        <button class="send-btn" id="send-btn" onclick="sendChat()">Send ↗</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<script>
+  /* ══════════════════════════════════════════════
+     CONFIGURATION
+     ══════════════════════════════════════════════
+     Replace the API_KEY value with your own
+     Anthropic API key before running locally.
+     Get one at: https://console.anthropic.com
+  ══════════════════════════════════════════════ */
+  /*const API_KEY   = 'YOUR_ANTHROPIC_API_KEY_HERE';
+  const API_URL   = 'https://api.anthropic.com/v1/messages';
+  const MODEL     = 'claude-sonnet-4-20250514';
+  */
+const TOPICS    = ['Algebra','Arithmetic','Geometry','Probability','Number Theory','Calculus','Logic & Puzzles'];
+const API_KEY = 'AIzaSyD5DY6gygixl9si28SyTClksrqYDhb9kIs';
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
+const MODEL   = 'gemini-2.5-flash';
+
+  /* ── State ── */
+  let diff            = 'Easy';
+  let currentProblem  = '';
+  let currentAnswer   = '';
+  let currentTopic    = '';
+  let timerInterval   = null;
+  let timerSeconds    = 120;
+  let chatHistory     = [];
+
+  let stats = { solved: 0, correct: 0, streak: 0, topicData: {} };
+  TOPICS.forEach(t => { stats.topicData[t] = { attempted: 0, correct: 0 }; });
+
+  /* Load persisted stats */
+  try {
+    const saved = JSON.parse(localStorage.getItem('mathLLMTutor'));
+    if (saved) {
+      stats.solved  = saved.solved  || 0;
+      stats.correct = saved.correct || 0;
+      stats.streak  = saved.streak  || 0;
+      TOPICS.forEach(t => { if (saved.topicData?.[t]) stats.topicData[t] = saved.topicData[t]; });
+    }
+  } catch (e) {}
+
+  /* ── Helpers ── */
+  function saveStats() {
+    try { localStorage.setItem('mathLLMTutor', JSON.stringify(stats)); } catch (e) {}
+  }
+
+  function updateUI() {
+    document.getElementById('s-solved').textContent  = stats.solved;
+    document.getElementById('s-correct').textContent = stats.correct;
+    document.getElementById('s-streak').textContent  = stats.streak;
+    document.getElementById('streak-pill').textContent  = stats.streak + ' day streak';
+    document.getElementById('solved-label').textContent = stats.solved + ' solved today';
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'performance') renderChart();
+  }
+
+  function setDiff(d, btn) {
+    diff = d;
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function getStatsContext() {
+    let ctx = 'Student performance data:\n';
+    TOPICS.forEach(t => {
+      const d = stats.topicData[t];
+      if (d.attempted > 0)
+        ctx += `- ${t}: ${d.correct}/${d.attempted} correct (${Math.round(d.correct / d.attempted * 100)}%)\n`;
+    });
+    ctx += `Overall: ${stats.correct}/${stats.solved} correct, ${stats.streak} day streak.`;
+    return ctx;
+  }
+
+  /* ── Core API call ── */
+  async function callClaude(messages, system = '', max_tokens = 800) {
+    const body = { model: MODEL, max_tokens, messages };
+    if (system) body.system = system;
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    const data = await res.json();
+    return data.content.map(i => i.text || '').join('');
+  }
+
+  /* ══════════════════════════════════════════════
+     TIMER
+  ══════════════════════════════════════════════ */
+  function onTimerToggle() {
+    const on   = document.getElementById('timer-toggle').checked;
+    const dur  = document.getElementById('timer-dur');
+    const disp = document.getElementById('timer-display');
+    dur.style.display = on ? 'inline-block' : 'none';
+    if (on) { disp.classList.add('show'); resetTimerDisplay(); }
+    else     { disp.classList.remove('show'); stopTimer(); }
+  }
+
+  function resetTimerDisplay() {
+    stopTimer();
+    timerSeconds = parseInt(document.getElementById('timer-dur').value);
+    updateTimerDisplay();
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    const d = document.getElementById('timer-display');
+    d.textContent = m + ':' + String(s).padStart(2, '0');
+    d.classList.toggle('urgent', timerSeconds <= 10 && timerSeconds > 0);
+  }
+
+  function startTimer() {
+    stopTimer();
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) {
+        stopTimer();
+        document.getElementById('feedback').innerHTML =
+          '<div class="feedback-box fb-wrong">Time\'s up! Use a hint or see the solution.</div>';
+        document.getElementById('check-btn').disabled = true;
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  /* ══════════════════════════════════════════════
+     LLM CALL 1 — Problem Generation
+     Uses Claude to generate a contextual math
+     problem for the chosen topic & difficulty.
+  ══════════════════════════════════════════════ */
+  async function generateProblem() {
+    stopTimer();
+    currentTopic = document.getElementById('topic-select').value;
+    const card   = document.getElementById('problem-card');
+
+    /* Reset UI */
+    document.getElementById('answer-section').style.display = 'none';
+    document.getElementById('feedback').innerHTML = '';
+    document.getElementById('answer-input').value = '';
+    document.getElementById('hint-btn').disabled  = false;
+    document.getElementById('sol-btn').disabled   = false;
+    document.getElementById('check-btn').disabled = false;
+    card._hint = ''; card._solution = '';
+
+    card.innerHTML = `<div style="font-size:14px;color:var(--text-secondary);display:flex;align-items:center;gap:8px">
+      AI generating problem <div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+    document.getElementById('suggest-text').innerHTML =
+      '<div class="loading-dots"><span></span><span></span><span></span></div>';
+
+    const problemPrompt = `Generate a ${diff} level ${currentTopic} math problem for a student.
+Reply ONLY with valid JSON (no markdown fences, no extra text):
+{"problem":"Problem statement in 1-3 sentences","answer":"exact final answer only (number or short expression)","hint":"one-sentence hint without revealing the answer","solution":"step-by-step solution in 3-5 numbered steps"}`;
+
+    const tipPrompt = `${getStatsContext()}
+The student just chose to practice ${currentTopic} at ${diff} difficulty.
+In one short sentence (max 20 words), give a personalized tip or encouragement based on their stats. Be specific.`;
+
+    try {
+      /* Fire both API calls in parallel for speed */
+      const [problemText, tipText] = await Promise.all([
+        callClaude([{ role: 'user', content: problemPrompt }], '', 800),
+        callClaude([{ role: 'user', content: tipPrompt }], '', 120)
+      ]);
+
+      const p = JSON.parse(problemText.replace(/```json|```/g, '').trim());
+      currentProblem = p.problem;
+      currentAnswer  = p.answer.trim().toLowerCase();
+
+      card.innerHTML = `
+        <div class="problem-meta">
+          <span class="badge badge-${diff.toLowerCase()}">${diff}</span>
+          <span class="badge badge-topic">${currentTopic}</span>
+        </div>
+        <div class="problem-text">${p.problem}</div>`;
+      card._hint     = p.hint;
+      card._solution = p.solution;
+
+      document.getElementById('answer-section').style.display = 'block';
+      document.getElementById('answer-input').focus();
+      document.getElementById('suggest-text').innerHTML =
+        `<strong>AI tip:</strong> ${tipText.trim()}`;
+
+      if (document.getElementById('timer-toggle').checked) {
+        timerSeconds = parseInt(document.getElementById('timer-dur').value);
+        updateTimerDisplay();
+        startTimer();
+      }
+    } catch (e) {
+      card.innerHTML = `<div style="color:var(--text-danger);font-size:14px">
+        Could not generate problem. Check your API key and try again.<br>
+        <small style="opacity:.7">${e.message}</small></div>`;
+      document.getElementById('suggest-text').textContent = 'Could not load suggestion.';
+    }
+  }
+
+  /* ══════════════════════════════════════════════
+     LLM CALL 2 — Answer Verification
+     Claude judges correctness semantically,
+     accepting equivalent forms (½ = 0.5 etc.)
+  ══════════════════════════════════════════════ */
+  async function checkAnswer() {
+    const input = document.getElementById('answer-input').value.trim();
+    if (!input || !currentProblem) return;
+    stopTimer();
+    const fb = document.getElementById('feedback');
+    document.getElementById('check-btn').disabled = true;
+    fb.innerHTML = '<div class="feedback-box fb-hint"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+
+    const prompt = `Math problem: "${currentProblem}"
+Correct answer: ${currentAnswer}
+Student answered: "${input}"
+Is the student correct? Consider all equivalent forms (fractions, decimals, simplified expressions, etc.).
+Reply ONLY with JSON (no markdown): {"correct":true/false,"feedback":"one encouraging sentence — mention what they got right, or which concept to review if wrong"}`;
+
+    try {
+      const text = await callClaude([{ role: 'user', content: prompt }], '', 200);
+      const p    = JSON.parse(text.replace(/```json|```/g, '').trim());
+
+      /* Update stats */
+      stats.solved++;
+      stats.topicData[currentTopic].attempted++;
+      if (p.correct) {
+        stats.correct++;
+        stats.streak = (stats.streak || 0) + 1;
+        stats.topicData[currentTopic].correct++;
+      }
+      saveStats(); updateUI();
+
+      fb.innerHTML = `<div class="feedback-box ${p.correct ? 'fb-correct' : 'fb-wrong'}">
+        ${p.correct ? '✓ ' : '✗ '}${p.feedback}</div>`;
+      if (!p.correct) document.getElementById('check-btn').disabled = false;
+    } catch (e) {
+      fb.innerHTML = '<div class="feedback-box fb-hint">Could not verify answer. Please try again.</div>';
+      document.getElementById('check-btn').disabled = false;
+    }
+  }
+
+  /* Hint & solution are stored from problem generation — no extra API call needed */
+  function getHint() {
+    const c = document.getElementById('problem-card');
+    if (!c._hint) return;
+    document.getElementById('feedback').innerHTML =
+      `<div class="feedback-box fb-hint">Hint: ${c._hint}</div>`;
+    document.getElementById('hint-btn').disabled = true;
+  }
+
+  function getSolution() {
+    const c = document.getElementById('problem-card');
+    if (!c._solution) return;
+    stopTimer();
+    document.getElementById('feedback').innerHTML =
+      `<div class="feedback-box fb-sol"><strong>Solution:</strong>\n${c._solution}</div>`;
+    document.getElementById('sol-btn').disabled  = true;
+    document.getElementById('hint-btn').disabled = true;
+  }
+
+  /* ══════════════════════════════════════════════
+     PERFORMANCE CHART (canvas-free SVG bars)
+  ══════════════════════════════════════════════ */
+  function renderChart() {
+    const el      = document.getElementById('chart-rows');
+    const hasData = TOPICS.some(t => stats.topicData[t].attempted > 0);
+
+    if (!hasData) {
+      el.innerHTML = '<div class="no-data">No data yet. Solve some problems to see your performance here.</div>';
+      return;
+    }
+
+    let html = '';
+    TOPICS.forEach(t => {
+      const d = stats.topicData[t];
+      if (d.attempted === 0) return;
+      const pct = Math.round(d.correct / d.attempted * 100);
+      html += `
+        <div class="topic-row">
+          <div class="topic-name">
+            <span>${t}</span>
+            <span class="topic-acc">${d.correct}/${d.attempted} &nbsp; ${pct}%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%;background:#378ADD;opacity:.25"></div>
+            <div class="bar-fill" style="width:${pct}%;background:#1D9E75"></div>
+          </div>
+        </div>`;
+    });
+
+    /* Summary cards */
+    const totalAcc = stats.solved > 0 ? Math.round(stats.correct / stats.solved * 100) : 0;
+    const attempted = TOPICS.filter(t => stats.topicData[t].attempted > 0);
+    const bestTopic = attempted.reduce((b, t) => {
+      const acc = stats.topicData[t].correct / stats.topicData[t].attempted;
+      return !b || acc > stats.topicData[b].correct / stats.topicData[b].attempted ? t : b;
+    }, null);
+    const weakTopic = attempted.reduce((w, t) => {
+      const acc = stats.topicData[t].correct / stats.topicData[t].attempted;
+      return !w || acc < stats.topicData[w].correct / stats.topicData[w].attempted ? t : w;
+    }, null);
+
+    html += `<div class="summary-grid">
+      <div class="summary-card"><div class="summary-card-label">Overall accuracy</div><div class="summary-card-val">${totalAcc}%</div></div>
+      <div class="summary-card"><div class="summary-card-label">Total attempted</div><div class="summary-card-val">${stats.solved}</div></div>
+      ${bestTopic ? `<div class="summary-card"><div class="summary-card-label">Strongest topic</div><div class="summary-card-val" style="font-size:13px">${bestTopic}</div></div>` : ''}
+      ${weakTopic && weakTopic !== bestTopic ? `<div class="summary-card"><div class="summary-card-label">Needs practice</div><div class="summary-card-val" style="font-size:13px">${weakTopic}</div></div>` : ''}
+    </div>`;
+
+    el.innerHTML = html;
+  }
+
+  /* ══════════════════════════════════════════════
+     LLM CALL 3 — AI Performance Analysis
+     Claude reads topic stats and writes a
+     personalised written performance report.
+  ══════════════════════════════════════════════ */
+  async function runAIAnalysis() {
+    const hasData = TOPICS.some(t => stats.topicData[t].attempted > 0);
+    if (!hasData) { alert('Solve some problems first to get an AI analysis.'); return; }
+
+    const btn  = document.getElementById('analyze-btn');
+    const card = document.getElementById('ai-analysis-card');
+    const body = document.getElementById('ai-analysis-body');
+    btn.disabled = true; btn.textContent = 'Analysing…';
+    card.style.display = 'block';
+    body.textContent = ''; body.classList.add('streaming');
+
+    const prompt = `${getStatsContext()}
+
+You are a math tutor. Analyse this student's performance and provide:
+1. A brief overall assessment (1-2 sentences)
+2. Top 2 strengths with specific praise
+3. Top 2 areas that need improvement with concrete advice
+4. One actionable study recommendation for this week
+
+Be concise, encouraging, and specific. Use plain text only — no markdown, no bullet symbols.`;
+
+    try {
+      const text = await callClaude([{ role: 'user', content: prompt }], '', 600);
+      body.classList.remove('streaming');
+      body.textContent = text.trim();
+    } catch (e) {
+      body.classList.remove('streaming');
+      body.textContent = 'Could not generate analysis. Please try again.';
+    }
+    btn.disabled = false; btn.textContent = '◆ AI analysis';
+  }
+
+  /* ══════════════════════════════════════════════
+     LLM CALL 4 — AI Coach Chat
+     Full multi-turn conversation. The system
+     prompt injects live performance stats so the
+     coach always gives data-aware advice.
+  ══════════════════════════════════════════════ */
+  async function sendChat() {
+    const input   = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const msg     = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    sendBtn.disabled = true;
+
+    const msgs = document.getElementById('chat-messages');
+    msgs.innerHTML += `
+      <div class="msg msg-user">
+        <div class="msg-avatar">You</div>
+        <div class="msg-bubble">${msg}</div>
+      </div>`;
+    chatHistory.push({ role: 'user', content: msg });
+
+    const typingId = 'typing-' + Date.now();
+    msgs.innerHTML += `
+      <div class="msg msg-ai" id="${typingId}">
+        <div class="msg-avatar">AI</div>
+        <div class="msg-bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>
+      </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+
+    const system = `You are a friendly, expert math tutor and coach.
+Here is the student's current performance:\n${getStatsContext()}
+Give concise, actionable advice. Plain text only, no markdown. Max 120 words per reply.`;
+
+    try {
+      const text = await callClaude(chatHistory, system, 300);
+      chatHistory.push({ role: 'assistant', content: text });
+      document.getElementById(typingId).remove();
+      msgs.innerHTML += `
+        <div class="msg msg-ai">
+          <div class="msg-avatar">AI</div>
+          <div class="msg-bubble">${text.trim()}</div>
+        </div>`;
+      msgs.scrollTop = msgs.scrollHeight;
+    } catch (e) {
+      document.getElementById(typingId).remove();
+      msgs.innerHTML += `
+        <div class="msg msg-ai">
+          <div class="msg-avatar">AI</div>
+          <div class="msg-bubble">Sorry, I could not respond. Please try again.</div>
+        </div>`;
+    }
+    sendBtn.disabled = false;
+  }
+
+  function quickPrompt(text) {
+    document.getElementById('chat-input').value = text;
+    sendChat();
+  }
+
+  function resetStats() {
+    if (!confirm('Reset all your stats and chat history?')) return;
+    stats = { solved: 0, correct: 0, streak: 0, topicData: {} };
+    TOPICS.forEach(t => { stats.topicData[t] = { attempted: 0, correct: 0 }; });
+    chatHistory = [];
+    saveStats(); updateUI(); renderChart();
+    document.getElementById('ai-analysis-card').style.display = 'none';
+  }
+
+  /* Init */
+  updateUI();
+</script>
+</body>
+</html>
